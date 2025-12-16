@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: kodi-ticket-mgmt
+    ports:
+      - "5001:5000"
+    volumes:
+      # Mount database directory for persistence
+      - ./data:/app/instance
+      # Mount log directory for script execution logs
+      - ./log:/app/log
+      # Mount app code for development (comment out for production)
+      - ./app.py:/app/app.py
+      - ./models.py:/app/models.py
+      - ./controllers.py:/app/controllers.py
+      - ./templates:/app/templates
+    environment:
+      - FLASK_APP=app.py
+      - FLASK_ENV=production
+      - SECRET_KEY=change-this-secret-key-in-production
+    restart: unless-stopped
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  data:

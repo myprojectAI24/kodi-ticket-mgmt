@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}Profiles - Ticket Management{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="bi bi-people-fill"></i> Profiles</h2>
+            <a href="{{ url_for('profile.create_profile') }}" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Create New Profile
+            </a>
+        </div>
+
+        {% if profiles %}
+        <div class="row">
+            {% for profile in profiles %}
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">
+                            <i class="bi bi-person-circle"></i> {{ profile.name }}
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted mb-2">
+                            <small><i class="bi bi-calendar"></i> Created: {{ profile.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+                        </p>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="badge bg-info">
+                                <i class="bi bi-ticket-perforated"></i> {{ profile.tickets|length }} ticket(s)
+                            </span>
+                            <span class="badge bg-success">
+                                {{ profile.tickets|selectattr('is_active')|list|length }} active
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-light">
+                        <div class="d-flex gap-2">
+                            <a href="{{ url_for('profile.view_profile', id=profile.id) }}" 
+                               class="btn btn-sm btn-outline-primary flex-fill">
+                                <i class="bi bi-eye"></i> View
+                            </a>
+                            <a href="{{ url_for('profile.edit_profile', id=profile.id) }}" 
+                               class="btn btn-sm btn-outline-secondary">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <button type="button" 
+                                    class="btn btn-sm btn-outline-danger" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#deleteModal{{ profile.id }}">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Delete Modal -->
+                <div class="modal fade" id="deleteModal{{ profile.id }}" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Confirm Delete</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                Are you sure you want to delete profile <strong>{{ profile.name }}</strong> and all its tickets?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <form method="POST" action="{{ url_for('profile.delete_profile', id=profile.id) }}" style="display: inline;">
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle"></i> No profiles found. 
+            <a href="{{ url_for('profile.create_profile') }}" class="alert-link">Create your first profile</a>.
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

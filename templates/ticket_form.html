@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Create Ticket - {{ profile.name }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('profile.list_profiles') }}">Profiles</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('profile.view_profile', id=profile.id) }}">{{ profile.name }}</a></li>
+                <li class="breadcrumb-item active">Create Ticket</li>
+            </ol>
+        </nav>
+
+        <div class="card shadow">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0">
+                    <i class="bi bi-ticket-perforated"></i> Create New Ticket
+                </h4>
+            </div>
+            <div class="card-body p-4">
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle"></i> 
+                    <strong>Profile:</strong> {{ profile.name }}
+                    <br>
+                    <small>A unique 4-digit PIN will be automatically generated for this ticket.</small>
+                </div>
+
+                <form method="POST">
+                    <div class="mb-4">
+                        <label for="length" class="form-label">
+                            <i class="bi bi-clock"></i> Length (minutes) <span class="text-danger">*</span>
+                        </label>
+                        <input type="number" 
+                               class="form-control form-control-lg" 
+                               id="length" 
+                               name="length" 
+                               required 
+                               min="1"
+                               autofocus
+                               placeholder="Enter duration in minutes (e.g., 30, 60, 120)">
+                        <div class="form-text">How long this ticket will be valid for (in minutes)</div>
+                    </div>
+
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-triangle"></i> 
+                        <strong>Note:</strong> After creating this ticket, a script will be executed to configure Kodi with the generated PIN.
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-success">
+                            <i class="bi bi-check-circle"></i> Create Ticket & Execute Script
+                        </button>
+                        <a href="{{ url_for('profile.view_profile', id=profile.id) }}" class="btn btn-secondary">
+                            <i class="bi bi-x-circle"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Length validation
+    document.getElementById('length').addEventListener('input', function(e) {
+        if (this.value < 1) {
+            this.value = 1;
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,16 @@
+project/
+│
+├── app.py                 # Main application file
+├── models.py              # Models (Database layer)
+├── controllers.py         # Controllers (Business logic)
+├── templates/             # Views (Presentation layer)
+│   ├── base.html
+│   ├── login.html
+│   ├── profiles.html
+│   ├── profile_form.html
+│   ├── profile_detail.html
+│   └── ticket_form.html
+├── log/                   # Execution logs
+│   └── exec.log
+├── requirements.txt       # Python dependencies
+└── accounts.db           # SQLite database (auto-created)
